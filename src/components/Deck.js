@@ -95,7 +95,7 @@ function Deck() {
       });
 
       if (!down && gone.size === cards.length)
-        setTimeout(() => gone.clear() || set(i => to(i)), 600);
+        setTimeout(() => gone.clear() || set(i => to(i)), 100000);
     }
   );
 
