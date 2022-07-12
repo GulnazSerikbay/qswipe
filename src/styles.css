@@ -40,8 +40,8 @@
     background-size: auto 85%;
     background-repeat: no-repeat;
     background-position: center center;
-    width: 45vh;
-    max-width: 500px;
+    width: 130vh;
+    max-width: 700px;
     height: 20vh;
     max-height: 200px;
     will-change: transform;
@@ -49,9 +49,11 @@
     text-align: center;
     align-items: center;
     font-size: 200%;
-    justify-content: center;
-    display: table-cell;
-    vertical-align:middle; 
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    vertical-align:middle;
+    text-transform: uppercase; 
     font-weight: 300;
     box-shadow: 0 12.5px 100px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
   }
@@ -61,8 +63,19 @@
     justify-content: center;
   }
 
-  .side {
-    width: 50%;
-    text-align: center;
-    font-weight: bold;  
+  .inner span{
+    margin: 5%;
+    color: purple;
+    font-weight: bold;
+  
   }
+
+  .side {
+    font-size: 20px; 
+    font-weight: lighter;
+    color: black !important;
+  }
+
+
+
+  

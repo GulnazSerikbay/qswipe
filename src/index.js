@@ -59,7 +59,7 @@ function Deck() {
       set(i => {
         if (index !== i) return // We're only interested in changing spring-data for the current spring
         const x = (200 + window.innerWidth) * dir
-        const rot = 10 + dir * 10 // How much the card tilts, flicking it harder makes it rotate faster
+        const rot = 10 + dir * 100 // How much the card tilts, flicking it harder makes it rotate faster
         const scale = 1.1 // Active cards lift up a bit
         return { x, rot, scale, delay: undefined, config: { friction: 50, tension: 200 } }
       })
@@ -87,19 +87,19 @@ function Deck() {
   })
 
 
-
-  function chooseSide() {
+  const chooseSide = () => {
     console.log(Math.floor(Math.random() * 2))
     return Math.floor(Math.random() * 2);
   }
 
   const sides = items.map((item) =>{
       const side = chooseSide()
-      const randWord = russianWords[Math.floor((11) * Math.random())];
+      const randWord = russianWords[Math.floor((russianWords.length) * Math.random())];
       return {left: side===0 ? item.russian : randWord, 
               right: side!==0 ? item.russian : randWord, 
               correct: side }
   })
+  console.log(sides)
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return ( 
@@ -107,16 +107,19 @@ function Deck() {
       
       props.map(({ x, y, rot, scale }, i) => (
         <div className='whole row'>
-        <div className = 'side'>{sides[i].left}</div>
+        
         <animated.div className = 'outer' key={i} style={{ x, y }}>
           {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
           
           <animated.div className = 'inner' {...bind(i)} style={{ transform: interpolate([rot, scale], trans) }}>
-              {items[i].kazakh}
+              <span className = "side">{sides[i].left}</span>
+              <span>{items[i].kazakh}</span>
+              <span className = "side">{sides[i].right}</span>
+
           </animated.div>
           
         </animated.div>
-        <div className = 'side'>{sides[i].right}</div>
+      
         </div>)
       )
       
