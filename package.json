@@ -50,8 +50,8 @@
     "url": "git+https://github.com/GulnazSerikbay/qswipe.git"
   },
   "keywords": [],
+  "homepage": "https://github.com/GulnazSerikbay/qswipe#readme",
   "bugs": {
     "url": "https://github.com/GulnazSerikbay/qswipe/issues"
-  },
-  "homepage": "https://github.com/GulnazSerikbay/qswipe#readme"
+  }
 }

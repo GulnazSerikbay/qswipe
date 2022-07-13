@@ -11,6 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/*#mens{*/
+/*  display: none;*/
+/*}*/
+
+input:placeholder-shown {
+  opacity: 0;
+  transform: translateY(1rem);
+}
 
 
 

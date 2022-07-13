@@ -4,10 +4,12 @@ import { useSprings, animated, to as interpolate } from 'react-spring'
 //import { useDrag } from 'react-use-gesture'
 import './styles.css'
 import Countdown from "react-countdown";
+import puk from './puk/jg-032316-sfx-feedback-incorrect-6.mp3'
+import duk from './puk/jg-032316-sfx-elearning-correct-answer-sound-1.mp3'
 
 //get the subset of random words
 const randomCards = (arr, size) => {
-  var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
+  let shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
   while (i-- > min) {
       index = Math.floor((i + 1) * Math.random());
       temp = shuffled[index];
@@ -99,7 +101,7 @@ function Deck() {
     dispatch({ type: 'CLICK', payload: { x, y } })
   }*/
 
-  const [date] = useState(Date.now())
+  const [date, setDate] = useState(null)
   //const [seconds, setSeconds] = useState(10);
   const [items, setItems] = useState(randomCards(allitems, 20));
   //const [completed, setCompleted] = useState(false);
@@ -107,10 +109,19 @@ function Deck() {
   const [gone] = useState(() => new Set()) // The set flags all the cards that are flicked out
 
   const [props, set] = useSprings(items.length, i => ({ ...to(i), from: from(i) })) // Create a bunch of springs using the helpers above
-
-
+const [completed, setCompleted] = useState(false)
 
   React.useEffect(() => {
+
+      window.addEventListener('keypress', function(event) {
+          if (event.code === 'Space') {
+              console.log("event code: ", event.code)
+              setDate(Date.now())
+          }
+      });
+
+      let pip = new Audio(puk)
+      let pop = new Audio(duk)
     const swipe = e => {
       const dir = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : null
       if (!dir) return
@@ -121,10 +132,16 @@ function Deck() {
 
       if (dir===sides[index].correctSide) {
         document.getElementById('root').style.backgroundColor = '#018001'
-        setTimeout(() => {document.getElementById('root').style.backgroundColor = 'lightblue'}, 100)
+        setTimeout(() => {document.getElementById('root').style.backgroundColor = 'lightblue'
+            pop.play()
+        }, 100)
       } else {
         document.getElementById('root').style.backgroundColor = '#ff6666'
-        setTimeout(() => {document.getElementById('root').style.backgroundColor = 'lightblue'}, 100)
+          // document.getElementById('mens').onplay()
+        setTimeout(() => {
+            document.getElementById('root').style.backgroundColor = 'lightblue'
+            pip.play()
+        }, 100)
       }
 
 
@@ -134,7 +151,15 @@ function Deck() {
         }
         return item
       }))
-      setScore((prev) => prev + (dir===sides[index].correctSide ? 1 : 0))
+        console.log(gone.size)
+        if (gone.size!== items.length ) {
+            setScore((prev) => prev + (dir === sides[index].correctSide ? 1 : 0))
+        }
+        else if (gone.size=== items.length || !date) {
+            setCompleted(true)
+            window.removeEventListener('keydown', swipe)
+
+        }
       /* setScore(items.reduce((total, item) => total+(item.correct ? 1 : 0),
                            0));*/
       console.log("score: ", score);
@@ -154,7 +179,7 @@ function Deck() {
       if (gone.size === items.length) setTimeout(() => gone.clear() || set(i => to(i)), 600)
     }
     //if (seconds !== 0) {window.addEventListener('keydown', swipe)}
-    window.addEventListener('keydown', swipe)
+    window.addEventListener('keydown', date ? swipe: {})
 
     return () => window.removeEventListener('keydown', swipe)
   })
@@ -181,17 +206,19 @@ function Deck() {
   //console.log(Date.now())
 
 
-
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-  if (time!==0){
+  if (!completed){
   return (
    <>
+
       <h1 style={{position: "absolute", margin: "5% 20%", color: "purple"}}>ESEP: {score}</h1>
 
-      <h1 style={{position: "absolute", margin: "5% 70%", color: "purple"}}>UAQYT:<Countdown date={date + 10000} renderer={({seconds})=> {
-            time = seconds
-            if (seconds === 0){setScore(prev => prev+1-1)}
-            return <span>{seconds }</span>}} /> </h1>
+      <h1 style={{position: "absolute", margin: "5% 70%", color: "purple"}}>UAQYT:{date ? <Countdown date= {date? date + 10000 : {}} renderer={({seconds})=> {
+          time = seconds
+          if (seconds === 0){
+              setCompleted(true)
+              setScore(prev => prev+1-1)}
+          return <span>{seconds }</span>}} /> : <></>} </h1>
 
           {props.map(({ x, y, rot, scale }, i) => (
             <div className='whole'>
@@ -204,23 +231,28 @@ function Deck() {
                   <span>{items[i].kazakh}</span>
                   <span className = "side">{sides[i].right}</span>
 
+
+
               </animated.div>
 
             </animated.div>
 
             </div>)
           )}:<></>
+       <h2 style={{position: "absolute", margin: "40% 38%", color: "purple"}}>Press Space to start the timer</h2>
       </>
 
 )}
 else {
-  return (
+
+      return (
   <div className = "resultdiv row">
       <h1 style={{  margin: "20px", color: "purple", width: "100wv"}}>NATIJE:{ score}/25</h1>
       <button
               htmlFor="intro"
           onClick = {restart}>Qaitadan</button>
   </div>
+
 
 
   )
